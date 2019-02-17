@@ -1,3 +1,14 @@
 body {
     padding-top: 5rem;
 }
+span{
+    color:red;
+}
+hr {
+    height:1px;
+}
+
+.flashes{
+    color:red;
+    text-align: center
+}
