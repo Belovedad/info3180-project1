@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block main %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+<h1>Add Profile</h1>
+
+
+<form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+    <div>
+        {{ form.fname.label }} <span>(Required)</span>
+        <br>
+        {{ form.fname(size=20)}}
+    </div>
+    
+    <div>
+        {{ form.lname.label }} <span>(Required)</span>
+        <br>
+        {{ form.lname(size=20)}}
+    </div>
+    
+    <div>
+        {{ form.email.label }} <span>(Required)</span>
+        <br>
+        {{ form.email(size=20,type="email") }}
+    </div>
+    
+    <div>
+        {{ form.gender.label }} <span>(Required)</span>
+        <br>
+        {{ form.gender() }}
+    </div>
+    
+    <div>
+        {{ form.location.label }} <span>(Required)</span>
+        <br>
+        {{ form.location(size=20) }}
+    </div>
+    
+    <div>
+        {{ form.biography.label }} <span>(Required)</span>
+        <br>
+        {{ form.biography(size=40) }}
+    </div>
+    
+    <div>
+        <p>Profile Picture</p>
+        {{ form.fileupload }} <span>(Required)</span>
+        <br>
+    </div>
+    
+    <br>
+    
+    <button type="submit">Add</button>
+</form>
+
+{% endblock %}

@@ -12,3 +12,50 @@ hr {
     color:red;
     text-align: center
 }
+
+body {
+    padding-top: 5rem;
+}
+.column {
+  float: left;
+  width: 33.33%;
+}
+
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.self{
+	margin-left:auto;
+	margin-right:auto;
+	border-radius: 50%;
+	height:100px;
+	width:100px;
+}
+.name{
+    font-weight: bold;
+}
+#bio,#stome {
+  text-align: center;
+  margin: auto;
+  width: 50%;
+  padding:10px;
+  
+}
+#bio{
+  background-color: black ;
+  color:white;
+}
+button{
+  color: #444444;
+    background: #F3F3F3;
+    border: 1px #DADADA solid;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 9pt;
+    outline: none;
+}

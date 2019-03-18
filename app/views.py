@@ -4,12 +4,15 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-
-from app import app
-from flask import render_template, request, redirect, url_for, flash
-from .forms import ContactForm
-from app import mail
+import os,datetime
+from sqlalchemy import exc
+from app import app,db
+from flask import render_template, request, redirect, url_for, flash,jsonify, make_response
+from .forms import AddForm
 from flask_mail import Message
+from werkzeug.utils import secure_filename
+from .models import UserProfile
+from flask_sqlalchemy import SQLAlchemy
 
 
 
@@ -17,27 +20,60 @@ from flask_mail import Message
 # Routing for your application.
 ###
 
-@app.route('/contact', methods=["GET","POST"])
-def contact():
-    """Render contact page"""
-    form = ContactForm()
+
+@app.route('/profile', methods=["GET","POST"])
+def profile():
+    """Render add profiile page"""
+    form = AddForm()
 
     if request.method == 'POST':
+        filefolder = app.config['UPLOAD_FOLDER']
         if form.validate_on_submit():
-            name = request.form["name"]
+            fname = request.form["fname"]
+            lname = request.form["lname"]
+            gender = request.form["gender"]
             email = request.form["email"]
-            subject = request.form["subject"]
-            message = request.form["message"]
-            msg = Message(subject, sender=(name,email),recipients=["to@example.com"])
-            msg.body = message
-            mail.send(msg)
+            location = request.form["location"]
+            biography = request.form["biography"]
+            
+            file = request.files['fileupload']
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(filefolder, filename))
+            created_on = datetime.date.today()
+            user = UserProfile(fname, lname, gender, email, location, biography, filename, created_on)
+            db.session.add(user)
+            db.session.commit()
             
             
-            flash('Message Sent Successfully')
-            return redirect(url_for('home'))
+            flash('Profile added successfully')
+            return redirect(url_for('profiles'))
     
-    return render_template('contact.html', form=form)
+    return render_template('newprof.html', form=form)
+
+@app.route("/profiles")
+def profiles():
+    users = UserProfile.query.all()
+    profiles = []
+    for user in users:
+        profiles.append({"pp": user.pp, "fname":user.fname, "lname": user.lname, "gender": user.gender, "location":user.location, "id":user.id})
     
+    return render_template("profilel.html", profiles = profiles)
+    
+@app.route('/profile/<userid>')
+
+def getprof(userid):
+    user = UserProfile.query.filter_by(id=userid).first()
+    
+    if user is None:
+        return redirect(url_for('home'))
+        
+    
+    return render_template("singprof.html", user=user)
+
+def format_date_joined(date):
+    return date.strftime("%B,%Y")
+
+
 @app.route('/')
 def home():
     """Render website's home page."""

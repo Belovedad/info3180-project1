@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block main%}
+
+
+<div class="profiles-container">
+    <h1 class="title">Profiles</h1>
+    <br> 
+    {% for profile in profiles %}
+    <div class="row border-style center profile">
+        <image class='self' src="{{ url_for('static', filename='uploads/'+profile['pp']) }}">
+        <div class="col pro-data">
+            <p>{{ profile['fname'] }} {{ profile['lname'] }}</p>
+            <p>{{ profile['gender'] }}</p>
+            <p>{{ profile['location'] }}</p>
+            <br>
+        </div>
+        <div class="view-profile center col">
+            <a href="{{ url_for('getprof', userid=profile['id']) }}">View profile</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock%}
